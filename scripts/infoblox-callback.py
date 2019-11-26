@@ -29,12 +29,29 @@ def claim_master_role(args):
 
     arecord_name = args.arecord.format(cluster=args.cluster)
 
+    if not arecord_name:
+        logger.error("Record name not specified")
+        return
+
     for _ in exponential_backoff():
         try:
-            new_record = objects.ARecord.create(conn, update_if_exists=True,
-                                                name=arecord_name, ipv4addr=args.ip, view=args.dns_view,
-                                                comment=args.comment.format(cluster=args.cluster))
-            logger.info("Host %s updated to %s", args.arecord, args.ip)
+            found = None
+            old_records = objects.ARecord.search_all(conn, name=arecord_name, view=args.dns_view)
+            logger.info("Found %d existing records for %s", len(old_records), arecord_name)
+            for old_record in old_records:
+                logger.info("Existing mapping for %s: %s", arecord_name, old_record.ipv4addr)
+                if old_record.ipv4addr != args.ip:
+                    logger.info("Deleting existing mapping for %s", old_record.ipv4addr)
+                    old_record.delete()
+                else:
+                    found = True
+            if found is None:
+                new_record = objects.ARecord.create(conn, update_if_exists=True,
+                                                    name=arecord_name, ipv4addr=args.ip, view=args.dns_view,
+                                                    comment=args.comment.format(cluster=args.cluster))
+                logger.info("Host %s updated to %s", new_record.name, new_record.ipv4addr)
+            else:
+                logger.info("Keeping existing mapping %s", found.to_dict())
             return
         except ib_exc.BaseExc as e:
             logger.error("Error when updating DNS record %s to %s: %s", arecord_name, args.ip, e)
