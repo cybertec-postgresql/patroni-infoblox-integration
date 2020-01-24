@@ -94,7 +94,7 @@ def main():
     parser.add_argument('-v', '--dns-view', default=wapi_dns_view, help="DNS view for the arecord")
     parser.add_argument('--comment', default=wapi_comment,
                         help="Comment line on the arecord entry")
-    parser.add_argument('-H', '--hostname', required=wapi_host is None, default=wapi_host,
+    parser.add_argument('-H', '--host', required=wapi_host is None, default=wapi_host,
                         help="WAPI endpoint address")
     parser.add_argument('-u', '--username', required=wapi_user is None, default=wapi_user,
                         help="WAPI username")

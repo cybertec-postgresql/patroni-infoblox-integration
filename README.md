@@ -56,7 +56,7 @@ Options
 |-------------------------------------|------------------------|:--------:|-------------|
 | `DATABASE_MASTER_HOSTNAME_TEMPLATE` | `-4` `--arecord`       | Y        | Hostname to create. A `{cluster}` placeholder will be replaced with cluster name (scope) from Patroni. | 
 |                                     | `-i` `--ip`            | N        | IP address that the hostname should point to when this host is master. Default is automatically detected from network interfaces. |
-| `WAPI_HOSTNAME`                     | `-H` `--hostname`      | Y        | WAPI REST API endpoint hostname or IP |
+| `WAPI_HOST`                         | `-H` `--host`          | Y        | WAPI REST API endpoint hostname or IP |
 | `WAPI_USER`                         | `-u` `--username`      | Y        | WAPI username for authentication |
 | `WAPI_PASSWORD`                     | `-p` `--password`      | Y        | WAPI password for authentication |
 | `WAPI_DNS_VIEW`                     | `-v` `--dns-view`      | N        | WAPI DNS view where the hostname is created |
