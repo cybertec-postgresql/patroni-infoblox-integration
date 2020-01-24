@@ -3,7 +3,7 @@
 from setuptools import setup
 
 setup(name='patroni-infoblox-integration',
-      version='1.0',
+      version='1.1',
       description='Helper tools for maintaining ',
       author='Ants Aasma',
       author_email='ants@cybertec.at',
