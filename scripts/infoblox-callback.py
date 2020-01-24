@@ -77,10 +77,15 @@ def get_my_ip():
         s.close()
 
 
+def parse_bool(v):
+    return False if v is None or v.lower() in ['', '0', 'off', 'false'] else True
+
+
 def main():
     wapi_host = os.environ.get('WAPI_HOST')
     wapi_user = os.environ.get('WAPI_USER')
     wapi_password = os.environ.get('WAPI_PASSWORD')
+    wapi_insecure = parse_bool(os.environ.get('WAPI_INSECURE'))
     wapi_version = os.environ.get('WAPI_VERSION')
     wapi_dns_view = os.environ.get('WAPI_DNS_VIEW', 'default')
     wapi_comment = os.environ.get('WAPI_COMMENT', "Patroni cluster {cluster} master IP")
@@ -100,6 +105,8 @@ def main():
                         help="WAPI username")
     parser.add_argument('-p', '--password', required=wapi_password is None, default=wapi_password,
                         help="WAPI password")
+    parser.add_argument('-k', '--insecure', action='store_true', help="Disable certificate validation",
+                        default=wapi_insecure)
     parser.add_argument('--wapi-version', default=wapi_version, help="WAPI version")
     parser.add_argument('--debug', action='store_true', help="Enable debug logging")
     parser.add_argument('action')
@@ -109,6 +116,15 @@ def main():
 
     logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s',
                         level=logging.DEBUG if args.debug else logging.INFO)
+
+    if args.insecure:
+        try:
+            import requests
+            from requests.packages.urllib3.exceptions import InsecureRequestWarning
+            requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+        except ImportError:
+            import urllib3
+            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
     if args.action in ('on_start', 'on_stop', 'on_role_change', 'on_restart'):
         record_role_change(args)

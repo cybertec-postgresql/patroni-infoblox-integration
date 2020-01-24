@@ -59,6 +59,7 @@ Options
 | `WAPI_HOST`                         | `-H` `--host`          | Y        | WAPI REST API endpoint hostname or IP |
 | `WAPI_USER`                         | `-u` `--username`      | Y        | WAPI username for authentication |
 | `WAPI_PASSWORD`                     | `-p` `--password`      | Y        | WAPI password for authentication |
+| `WAPI_INSECURE`                     | `-k` `--insecure`      | N        | Validate WAPI certificates |
 | `WAPI_DNS_VIEW`                     | `-v` `--dns-view`      | N        | WAPI DNS view where the hostname is created |
 | `WAPI_COMMENT`                      | `--comment`            | N        | Comment to set on the created hostname. `{cluster}` will be replaces with cluster name (scope) from Patroni. |
 | `WAPI_VERSION`                      | `--wapi-version`       | N        | WAPI API version to access. |
