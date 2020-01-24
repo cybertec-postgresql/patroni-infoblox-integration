@@ -51,7 +51,7 @@ def claim_master_role(args):
                                                     comment=args.comment.format(cluster=args.cluster))
                 logger.info("Host %s updated to %s", new_record.name, new_record.ipv4addr)
             else:
-                logger.info("Keeping existing mapping %s", found.to_dict())
+                logger.info("Keeping existing mapping %s", old_record.ipv4addr)
             return
         except ib_exc.BaseExc as e:
             logger.error("Error when updating DNS record %s to %s: %s", arecord_name, args.ip, e)
