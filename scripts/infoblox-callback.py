@@ -22,7 +22,7 @@ def exponential_backoff(start=0.1, max=60, factor=2):
 
 
 def claim_master_role(args):
-    opts = {'host': args.hostname, 'username': args.username, 'password': args.password}
+    opts = {'host': args.host, 'username': args.username, 'password': args.password}
     if args.wapi_version:
         opts['wapi_version'] = args.wapi_version
     conn = connector.Connector(opts)
