@@ -46,7 +46,7 @@ def claim_master_role(args):
                 else:
                     found = True
             if found is None:
-                new_record = objects.ARecord.create(conn, update_if_exists=True,
+                new_record = objects.ARecord.create(conn, check_if_exists=False,
                                                     name=arecord_name, ipv4addr=args.ip, view=args.dns_view,
                                                     comment=args.comment.format(cluster=args.cluster))
                 logger.info("Host %s updated to %s", new_record.name, new_record.ipv4addr)
