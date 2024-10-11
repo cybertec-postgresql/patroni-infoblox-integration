@@ -1,23 +1,23 @@
-%define VERSION        1.2
+%define VERSION        1.3
 
 %define        ENVNAME  patroni-infoblox-integration
 %define        INSTALLPATH /opt/app/patroni-infoblox-integration
 %define debug_package %{nil}
+# remove build-id files that conflict with system python
+%define _build_id_links none
 
 # Fetch remote sources
 %undefine _disable_source_fetch
 
 Name:          patroni-infoblox-integration
 Version:       %{VERSION}
-Release:       1.rhel7
+Release:       1%{dist}
 License:       MIT
 Summary:       PostgreSQL high-availability manager
-Source:        %{name}-%{version}.tar.gz
+Source:        https://github.com/cybertec-postgresql/patroni-infoblox-integration/archive/refs/tags/%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{buildprefix}-buildroot
 Requires:      python3
-
-#%global __requires_exclude_from ^%{INSTALLPATH}/lib/python3.6/site-packages/(psycopg2/|_cffi_backend.so|_cffi_backend.cpython-36m-x86_64-linux-gnu.so|.libs_cffi_backend/libffi-.*.so.6.0.4)
-#%global __provides_exclude_from ^%{INSTALLPATH}/lib/python3.6/
+BuildRequires: python3-virtualenv
 
 %global __python %{__python3}
 
@@ -31,11 +31,13 @@ Packaged version of Patroni HA manager.
 
 %install
 mkdir -p $RPM_BUILD_ROOT%{INSTALLPATH}
-virtualenv-3 --distribute --system-site-packages $RPM_BUILD_ROOT%{INSTALLPATH}
+virtualenv --system-site-packages $RPM_BUILD_ROOT%{INSTALLPATH}
 $RPM_BUILD_ROOT%{INSTALLPATH}/bin/pip3 install .
 
-virtualenv-3.6 --relocatable $RPM_BUILD_ROOT%{INSTALLPATH}
-sed -i "s#$RPM_BUILD_ROOT##" $RPM_BUILD_ROOT%{INSTALLPATH}/bin/activate*
+# remove pycache files that reference the build root
+find $RPM_BUILD_ROOT -name __pycache__ | xargs -r rm -rf
+# fix references to build root in shell scripts
+sed -i "s#$RPM_BUILD_ROOT##" $RPM_BUILD_ROOT%{INSTALLPATH}/bin/*
 
 %clean
 rm -rf $RPM_BUILD_ROOT
