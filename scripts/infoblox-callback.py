@@ -60,7 +60,7 @@ def claim_primary_role(args):
 def record_role_change(args):
     new_role = None if args.action == 'on_stop' else args.new_role
     logger.debug("Changing the nodes role to %s", new_role)
-    if new_role == 'primary':
+    if new_role in ['primary', 'master']:
         logger.info("Redirecting primary service")
         claim_primary_role(args)
 
