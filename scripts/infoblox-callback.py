@@ -21,7 +21,7 @@ def exponential_backoff(start=0.1, max=60, factor=2):
         backoff_time = min(backoff_time*factor, max)
 
 
-def claim_master_role(args):
+def claim_primary_role(args):
     opts = {'host': args.host, 'username': args.username, 'password': args.password}
     if args.wapi_version:
         opts['wapi_version'] = args.wapi_version
@@ -60,9 +60,9 @@ def claim_master_role(args):
 def record_role_change(args):
     new_role = None if args.action == 'on_stop' else args.new_role
     logger.debug("Changing the nodes role to %s", new_role)
-    if new_role == 'master':
-        logger.info("Redirecting master service")
-        claim_master_role(args)
+    if new_role == 'primary':
+        logger.info("Redirecting primary service")
+        claim_primary_role(args)
 
 
 def get_my_ip():
@@ -88,7 +88,7 @@ def main():
     wapi_insecure = parse_bool(os.environ.get('WAPI_INSECURE'))
     wapi_version = os.environ.get('WAPI_VERSION')
     wapi_dns_view = os.environ.get('WAPI_DNS_VIEW', 'default')
-    wapi_comment = os.environ.get('WAPI_COMMENT', "Patroni cluster {cluster} master IP")
+    wapi_comment = os.environ.get('WAPI_COMMENT', "Patroni cluster {cluster} primary IP")
     v4_host_template = os.environ.get('DATABASE_MASTER_HOSTNAME_TEMPLATE')
 
     parser = argparse.ArgumentParser(description="Patroni Infoblox integration script")
