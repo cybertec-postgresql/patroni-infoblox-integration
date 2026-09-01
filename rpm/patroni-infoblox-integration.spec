@@ -1,4 +1,4 @@
-%define VERSION        1.3
+%define VERSION        1.4
 
 %define        ENVNAME  patroni-infoblox-integration
 %define        INSTALLPATH /opt/app/patroni-infoblox-integration
